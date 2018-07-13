@@ -5,20 +5,19 @@ import (
 )
 
 func main() {
-	logReader := LogRader{}
-	logReader.ParseFunc = func(line []byte) {
+	logReader := NewLogRader("q.log", func(line []byte) {
 		fmt.Printf("f1 => %s", line)
-	}
-	go logReader.Read("q.log")
+	})
 
-	logReader2 := LogRader{}
-	logReader2.ParseFunc = func(line []byte) {
+	logReader2 := NewLogRader("qq.log", func(line []byte) {
 		fmt.Printf("f2 => %s", line)
-	}
-	go logReader2.Read("qq.log")
+	})
+
+	go logReader.Read()
+	go logReader2.Read()
 
 	fmt.Printf("%s\n", "main")
 
 	logReader.Stop()
-	// logReader2.Stop()
+	logReader2.Stop()
 }

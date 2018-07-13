@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"time"
 )
 
 type LogRader struct {
-	File *os.File
-	Line chan []byte
-	Size int64
-	Quit chan bool
+	File      *os.File
+	Line      chan []byte
+	Size      int64
+	Quit      chan bool
+	ParseFunc func([]byte)
 }
 
 func (reader *LogRader) Read(path string) {
@@ -28,7 +28,8 @@ func (reader *LogRader) Read(path string) {
 		for {
 			select {
 			case line := <-reader.Line:
-				fmt.Printf("%s", line)
+				reader.ParseFunc(line)
+				// fmt.Printf("%s", line)
 			case <-time.After(500 * time.Millisecond):
 				reader.checkSize(inFile)
 				line := make([]byte, reader.Size)

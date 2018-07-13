@@ -32,5 +32,4 @@ func (reader *LogRader) Read() {
 
   <-reader.Quit
 }
-}
 ```
